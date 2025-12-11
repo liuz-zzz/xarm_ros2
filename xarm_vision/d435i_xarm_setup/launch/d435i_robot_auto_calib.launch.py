@@ -16,13 +16,13 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def launch_setup(context, *args, **kwargs):
-    robot_ip = LaunchConfiguration('robot_ip')
-    robot_type = LaunchConfiguration('robot_type')
-    dof = LaunchConfiguration('dof', default=6)
-    hw_ns = LaunchConfiguration('hw_ns', default='')
+    robot_ip = LaunchConfiguration('robot_ip') # 机器人IP地址
+    robot_type = LaunchConfiguration('robot_type') # 机器人类型，
+    dof = LaunchConfiguration('dof', default=6) 
+    hw_ns = LaunchConfiguration('hw_ns', default='') #硬件命名空间
     marker_size = LaunchConfiguration('marker_size', default=0.15)
     marker_id = LaunchConfiguration('marker_id', default=398)
-
+    # 在 OpaqueFunction 中用 perform() 获取实际字符串值，这样才能比较
     robot_type = robot_type.perform(context)
     dof = dof.perform(context)
     hw_ns = hw_ns.perform(context)
@@ -32,7 +32,7 @@ def launch_setup(context, *args, **kwargs):
         dof = '6'
     
     calib_filename = '{}_rs_on_hand_calibration'.format(robot_type)
-
+    # 等价于 ros2 launch realsense2_camera rs_launch.py publish_tf:=false
     rs_camera_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(PathJoinSubstitution([FindPackageShare('realsense2_camera'), 'launch', 'rs_launch.py'])),
         launch_arguments={
@@ -46,8 +46,8 @@ def launch_setup(context, *args, **kwargs):
         package='aruco_ros',
         executable='single',
         parameters=[{
-            'image_is_rectified': True,
-            'marker_size': marker_size,
+            'image_is_rectified': True, # 去畸变
+            'marker_size': marker_size, 
             'marker_id': marker_id,
             'reference_frame': 'camera_color_optical_frame',
             'camera_frame': 'camera_color_optical_frame',
@@ -80,12 +80,12 @@ def launch_setup(context, *args, **kwargs):
     easy_handeye_calib_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(PathJoinSubstitution([FindPackageShare('easy_handeye2'), 'launch', 'calibrate.launch.py'])),
         launch_arguments={
-            'name': calib_filename,
-            'calibration_type': 'eye_in_hand',
-            'tracking_base_frame': 'camera_color_optical_frame',
+            'name': calib_filename, # 标定结果文件名
+            'calibration_type': 'eye_in_hand', 
+            'tracking_base_frame': 'camera_color_optical_frame', # “跟踪系统”的基坐标系 = 相机光学坐标系
             'tracking_marker_frame': 'camera_marker',
             'robot_base_frame': 'link_base',
-            'robot_effector_frame': 'link_eef',
+            'robot_effector_frame': 'link_eef', # 末端执行器
             # 'move_group_namespace': '/',
             # 'move_group': '{}{}'.format(robot_type, dof if robot_type != 'uf850' else ''),
             # 'freehand_robot_movement': 'true'
