@@ -1,0 +1,21 @@
+# SAM 分割节点配置参数
+
+sam_segmenter:
+  ros__parameters:
+    # SAM 模型配置
+    model_path: "models/sam_vit_b.pth"     # 模型路径: vit_b (快), vit_l (平衡), vit_h (准确)
+    model_type: "vit_b"                     # 模型类型: vit_b, vit_l, vit_h
+    device: "cuda:0"                        # 推理设备: "cuda:0" 或 "cpu"
+    
+    # ROS 话题配置
+    image_topic: "/camera/camera/color/image_raw"
+    detection_topic: "/yolo/detections"
+    publish_annotated: true                 # 是否发布标注后的图像
+    
+    # 时间同步配置
+    sync_slop: 0.1                          # 时间同步容差(秒) - 允许的最大时间差
+    
+    # 性能提示:
+    # - vit_b: 最快，适合实时应用 (358MB)
+    # - vit_l: 平衡速度和精度 (1.2GB)
+    # - vit_h: 最高精度，需要强大 GPU (2.4GB)

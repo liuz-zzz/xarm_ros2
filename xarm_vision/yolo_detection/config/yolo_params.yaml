@@ -1,0 +1,24 @@
+# YOLO 检测节点配置参数
+
+yolo_detector:
+  ros__parameters:
+    # YOLO 模型配置
+    model_path: "models/yolov11n.pt"          # 模型路径，可选: yolov8n/s/m/l/x.pt 或 yolov11n/s/m/l/x.pt
+    confidence_threshold: 0.5          # 置信度阈值 (0.0-1.0)
+    iou_threshold: 0.45                # NMS IOU 阈值
+    device: "cuda:0"                   # 推理设备: "cuda:0" 或 "cpu"
+    
+    # ROS 话题配置
+    image_topic: "/camera/camera/color/image_raw"
+    publish_annotated: true            # 是否发布标注后的图像
+    
+    # 目标类别过滤（空列表表示检测所有类别）
+    # COCO 数据集常用类别示例:
+    # ["person", "cup", "bottle", "bowl", "laptop", "mouse", "keyboard", "cell phone"]
+    target_classes: ["person"]
+    
+    # 性能提示:
+    # - yolov8n/yolov11n: 最快，适合实时应用
+    # - yolov8s/yolov11s: 平衡速度和精度
+    # - yolov8m/yolov11m: 更高精度，速度较慢
+    # - yolov8l/x: 最高精度，需要强大 GPU

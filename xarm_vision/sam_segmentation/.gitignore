@@ -1,0 +1,23 @@
+# SAM模型文件 (太大,不上传到GitHub)
+models/*.pth
+
+# Python缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ROS
+build/
+install/
+log/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 其他
+.DS_Store
