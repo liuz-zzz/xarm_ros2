@@ -27,8 +27,13 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(object_recognition_msgs REQUIRED)
 find_package(xarm_msgs REQUIRED)
 find_package(xarm_api REQUIRED)
+find_package(vision_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(OpenCV REQUIRED)
 
 set(dependencies "rclcpp" "std_msgs" "tf2_ros" "tf2_geometry_msgs" "object_recognition_msgs" "xarm_msgs" "xarm_api")
+set(yolo_dependencies "rclcpp" "vision_msgs" "sensor_msgs" "cv_bridge" "tf2_ros" "tf2_geometry_msgs")
 
 add_executable(findobj_grasp_moveit_planner src/findobj_grasp_moveit_planner.cpp)
 ament_target_dependencies(findobj_grasp_moveit_planner
@@ -44,6 +49,19 @@ add_executable(tf_object_to_base src/tf_object_to_base.cpp)
 ament_target_dependencies(tf_object_to_base
   ${dependencies}
 )
+
+add_executable(yolo_tf_bridge src/yolo_tf_bridge.cpp)
+ament_target_dependencies(yolo_tf_bridge
+  ${yolo_dependencies}
+)
+target_link_libraries(yolo_tf_bridge ${OpenCV_LIBS})
+
+add_executable(yolo_tf_bridge_interactive src/yolo_tf_bridge_interactive.cpp)
+ament_target_dependencies(yolo_tf_bridge_interactive
+  ${yolo_dependencies}
+)
+target_link_libraries(yolo_tf_bridge_interactive ${OpenCV_LIBS})
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -68,6 +86,8 @@ install(
   findobj_grasp_moveit_planner 
   findobj_grasp_xarm_api 
   tf_object_to_base
+  yolo_tf_bridge
+  yolo_tf_bridge_interactive
   DESTINATION lib/${PROJECT_NAME}
 )
 
